@@ -20,7 +20,7 @@ function Home() {
 
         fetchData();
     }, []);
-    console.log(datas);
+    
     return (
         <>
             <Header />
@@ -40,7 +40,7 @@ function Home() {
                 {datas.map(el => (
                     <article key={el._id}>
                         <img src={el.image} alt={el.titre} />
-                        <Link to={`product.html?id=${el._id}`}>Buy {el.shorttitle}</Link>
+                        <Link to={`/product/${el._id}`}>Buy {el.shorttitle}</Link>
                 </article>
                 ))}
                 </section>

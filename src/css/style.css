@@ -389,17 +389,16 @@ form button {
 }
 
 dialog{
-    border:none;
     font-family: 'Source Sans 3', sans-serifs;
-}
-dialog a:nth-child(1){
-    background-color: #EE7F43;
+    background-color: #ffffff;
+    border: 1px solid #EE7F43;
     display: inline;
-    color:#fff;
+    color:#000000;
     padding:3px 10px;
     border-radius: 20px;
-    margin-top:0px;
+    margin-top:10px;
 }
+
 dialog h2 {
     text-align: center;
 }
