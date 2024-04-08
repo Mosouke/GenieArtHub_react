@@ -34,7 +34,7 @@ function Home() {
             <section id="aiartshop" className="productlist">
                 <div>
                     <img src="/img/logo-black.png" alt="Logo GeniArtHub version sombre" />
-                    <Link id="carticon" to="cart.html"><img src="/img/cart.svg" alt="Aller au panier" /></Link>
+                    <Link id="carticon" to="cart"><img src="/img/cart.svg" alt="Aller au panier" /></Link>
                 </div>
                 <section className="products">
                 {datas.map(el => (
