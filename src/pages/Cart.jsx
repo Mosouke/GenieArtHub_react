@@ -3,6 +3,7 @@ import LogoPanier from '../components/LogoPanier';
 import Footer from '../components/Footer';
 import ShowInfosModal from "../components/Modale";
 
+// Fonction asynchrone pour récupérer les produits depuis l'API
 async function fetchProducts() {
     try {
         const response = await fetch("http://localhost:3000/api/products");
@@ -14,14 +15,16 @@ async function fetchProducts() {
 }
 
 function Cart() {
-    const [cart, setCart] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [formError, setFormError] = useState(null);
-    const [submitting, setSubmitting] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [modalTitle, setModalTitle] = useState("");
+    // Déclaration des états
+    const [cart, setCart] = useState([]); // État du panier
+    const [products, setProducts] = useState([]); // État des produits récupérés depuis l'API
+    const [formError, setFormError] = useState(null); // État pour stocker les erreurs de formulaire
+    const [submitting, setSubmitting] = useState(false); // État pour gérer la soumission du formulaire
+    const [showModal, setShowModal] = useState(false); // État pour afficher ou masquer la modal
+    const [modalMessage, setModalMessage] = useState(""); // État pour le message affiché dans la modal
+    const [modalTitle, setModalTitle] = useState(""); // État pour le titre affiché dans la modal
 
+    // Effet pour charger les produits depuis l'API et le panier depuis le localStorage lors du chargement de la page
     useEffect(() => {
         const init = async () => {
             const cartFromStorage = JSON.parse(localStorage.getItem("cart")) || [];
@@ -32,12 +35,14 @@ function Cart() {
         init();
     }, []);
 
+    // Fonction pour supprimer un article du panier
     const handleDelete = (id, taille) => {
         const updatedCart = cart.filter(item => !(item.id === id && item.taille === taille));
         setCart(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
+    // Fonction pour mettre à jour la quantité d'un article dans le panier
     const handleQuantityChange = (id, taille, quantite) => {
         quantite = parseInt(quantite);
         if (isNaN(quantite) || quantite < 1) {
@@ -53,14 +58,17 @@ function Cart() {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
+    // Fonction pour calculer le nombre total d'articles dans le panier
     const getTotalArticles = () => cart.reduce((total, item) => total + parseInt(item.quantite), 0);
 
+    // Fonction pour calculer le montant total de la commande
     const getTotalAmount = () => cart.reduce((total, item) => {
         const product = products.find(product => product._id === item.id);
         const declinaison = product && product.declinaisons.find(declinaison => declinaison.taille === item.taille);
         return total + (declinaison && declinaison.prix ? parseFloat(declinaison.prix) * parseInt(item.quantite) : 0);
     }, 0);
 
+    // Fonction de soumission du formulaire de commande
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (cart.length === 0) {
@@ -70,8 +78,8 @@ function Cart() {
         setSubmitting(true);
         const form = event.target;
         const data = new FormData(form);
-
         
+        // Validation des champs du formulaire
         const validations = [
             { field: "prenom", min: 2, regex: /^[a-zA-Z\sàéèêîôùû\-]*$/, message: "Le prénom doit contenir au moins 2 caractères et ne doit pas contenir de caractères spéciaux" },
             { field: "nom", min: 2, regex: /^[a-zA-Z\sàéèêîôùû\-]*$/, message: "Le nom doit contenir au moins 2 caractères et ne doit pas contenir de caractères spéciaux" },
@@ -142,6 +150,7 @@ function Cart() {
                 <section>
                     <h2>Votre Panier</h2>
                     <div id="panier">
+                        {/* Affichage des articles dans le panier */}
                         {cart.map((item, index) => {
                             const product = products.find(product => product._id === item.id);
                             const declinaison = product && product.declinaisons.find(declinaison => declinaison.taille === item.taille);
@@ -166,6 +175,7 @@ function Cart() {
                         })}
                     </div>
                     <div className="total">
+                        {/* Affichage du total de la commande */}
                         <h3>Total de la commande</h3>
                         <p id="total">
                             <span id="totalarticle">{getTotalArticles()}</span> articles pour un montant de <span id="montanttotal">{getTotalAmount().toFixed(2)}</span>€
@@ -174,10 +184,14 @@ function Cart() {
                 </section>
                 <section>
                     <h2>Formulaire de commande</h2>
+                    {/* Affichage des erreurs de formulaire */}
                     {formError && <ShowInfosModal message={formError} title="Erreur" duration={5000} />} 
+                    {/* Affichage de la modal */}
                     {showModal && <ShowInfosModal message={modalMessage} title={modalTitle} duration={30000} />}
+                    {/* Formulaire de commande */}
                     <form onSubmit={handleSubmit} id="command">
                         <div>
+                            {/* Champs du formulaire */}
                             <div>
                                 <label htmlFor="prenom">Prénom: </label>
                                 <input type="text" name="prenom" required aria-label="Prénom" />
@@ -200,6 +214,7 @@ function Cart() {
                             </div>
                         </div>
 
+                        {/* Bouton de soumission du formulaire */}
                         <button className="button-buy" type="submit" disabled={submitting}>Passer commande</button>
                     </form>
                 </section>
