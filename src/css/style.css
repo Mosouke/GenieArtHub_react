@@ -264,6 +264,7 @@ article > div > div.price > p {
     margin: auto;
     display: inline-block;
     margin-top: 24px;
+    cursor: pointer;
 }
 .detailoeuvre h2 {
     margin-top: 50px;
